@@ -1,0 +1,8 @@
+This project is created with these goals in mind:
+- it works on android 2.2 and above
+- It allows a person to login
+- then capture a foto
+- and upload it to predefined server.
+- the captured foto includes server timestamp
+- captured foto includes gps location of the photo taken
+
