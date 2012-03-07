@@ -3,7 +3,8 @@
       package="in.pushpraj.imageCapture"
       android:versionCode="1"
       android:versionName="1.0">
-    <application android:label="@string/app_name" >
+    <application android:label="@string/app_name"
+            android:debuggable="true">
         <activity android:name="FirstActivity"
                   android:label="@string/app_name">
             <intent-filter>
