@@ -6,22 +6,27 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
+import android.location.*;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+import java.util.Locale;
+
 public class FirstActivity extends Activity
 {
     private static final int CAMERA_PIC_REQUEST = 1337;
 
     private Location currentLocation;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -49,12 +54,24 @@ public class FirstActivity extends Activity
           return;
         }
 
-        LocationManager mlocManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 
-        currentLocation = mlocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        printLocation(currentLocation);
 
-        LocationListener mlocListener = new MyLocationListener();
-        mlocManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, 0, 0, mlocListener);
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        List<Address> addresses = null;
+        try {
+         addresses = geocoder.getFromLocation(currentLocation.getLatitude(), currentLocation.getLongitude(), 1);
+        }
+        catch (Exception e) {
+
+        }
+
+
+
+        locationListener = new MyLocationListener();
+        locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
         Button button = (Button) findViewById(R.id.my_button);
         button.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +98,26 @@ public class FirstActivity extends Activity
         }
     }
 
+    /** Register for the updates when Activity is in foreground */
+	@Override
+	protected void onResume() {
+		super.onResume();
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 20000, 1, locationListener);
+	}
+
+	/** Stop the updates when Activity is paused */
+	@Override
+	protected void onPause() {
+		super.onPause();
+		locationManager.removeUpdates(locationListener);
+	}
+
+    private void printLocation(Location location) {
+		if (location == null)
+            Log.v("","\nLocation[unknown]\n\n");
+		else
+			Log.v("","\n\n" + location.toString());
+	}
 
     public class MyLocationListener implements LocationListener
     {
@@ -88,6 +125,7 @@ public class FirstActivity extends Activity
         {
             currentLocation = loc;
 
+            printLocation(currentLocation);
             String Text = "My current location is: " + "Latitud = " + loc.getLatitude() +"Longitud = " + loc.getLongitude();
             Toast.makeText(getApplicationContext(),Text, Toast.LENGTH_SHORT).show();
         }
