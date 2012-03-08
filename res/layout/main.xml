@@ -4,15 +4,30 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-<TextView  
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:text="Hello World, FirstActivity"
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Login"
     />
+
+    <EditText android:id="@+id/username"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="Login Name"
+            />
+
+    <EditText android:id="@+id/password"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+         android:hint="Password"
+    />
+
+
      <Button
      android:id="@+id/my_button"
-     android:layout_width="wrap_content"
      android:layout_height="wrap_content"
-     android:text="@string/my_button_text"/>
+     android:text="@string/my_button_text"
+     android:layout_width="fill_parent"
+             />
 </LinearLayout>
 
